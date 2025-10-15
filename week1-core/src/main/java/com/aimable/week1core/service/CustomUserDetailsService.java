@@ -3,6 +3,7 @@ package com.aimable.week1core.service;
 import com.aimable.week1core.entity.User;
 import com.aimable.week1core.enums.Role;
 import com.aimable.week1core.repository.UserRepository;
+import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -15,6 +16,7 @@ import java.util.Collection;
 import java.util.stream.Collectors;
 
 @Service
+@AllArgsConstructor
 public class CustomUserDetailsService implements UserDetailsService {
 
     @Autowired

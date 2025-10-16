@@ -1,5 +1,6 @@
 package com.aimable.week1core.service;
 
+import com.aimable.week1core.debug.AuthenticationFlowTracer;
 import com.aimable.week1core.dto.LoginRequest;
 import com.aimable.week1core.dto.RegisterRequest;
 import com.aimable.week1core.entity.User;
@@ -31,6 +32,9 @@ public class AuthService {
     @Autowired
     private AuthenticationManager authenticationManager;
 
+    @Autowired
+    private AuthenticationFlowTracer authenticationFlowTracer;
+
     public User register(RegisterRequest request){
         if(userRepository.existsByEmail(request.getEmail())){
             throw new RuntimeException("User already exists");
@@ -46,11 +50,17 @@ public class AuthService {
 
     public Map<String,Object> login(LoginRequest request){
 
+/**
         Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword())
         );
 
         SecurityContextHolder.getContext().setAuthentication(authentication);
+*/
+        // using the authentication flow tracer
+        authenticationFlowTracer.traceFullAuthenticationFlow(request.getEmail(), request.getPassword());
+
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
         Map<String,Object> response = new HashMap<>();
         response.put("message","Login successful");

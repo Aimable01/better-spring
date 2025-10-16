@@ -1,5 +1,6 @@
 package com.aimable.week1core.controller;
 
+import com.aimable.week1core.dto.LoginRequest;
 import com.aimable.week1core.dto.RegisterRequest;
 import com.aimable.week1core.entity.User;
 import com.aimable.week1core.repository.UserRepository;
@@ -12,6 +13,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.Map;
 
 @RestController
 @RequestMapping("/auth")
@@ -28,7 +31,8 @@ public class AuthController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<String> login(){
-        return ResponseEntity.ok("Login success");
+    public ResponseEntity<Map<String, Object>> login(@Valid @RequestBody LoginRequest request) {
+        Map<String, Object> loginResponse = authService.login(request);
+        return ResponseEntity.ok(loginResponse);
     }
 }

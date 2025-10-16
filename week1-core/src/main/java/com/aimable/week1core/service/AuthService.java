@@ -1,15 +1,22 @@
 package com.aimable.week1core.service;
 
+import com.aimable.week1core.dto.LoginRequest;
 import com.aimable.week1core.dto.RegisterRequest;
 import com.aimable.week1core.entity.User;
 import com.aimable.week1core.enums.Role;
 import com.aimable.week1core.repository.UserRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Service
 @AllArgsConstructor
@@ -20,6 +27,9 @@ public class AuthService {
 
     @Autowired
     private PasswordEncoder passwordEncoder;
+
+    @Autowired
+    private AuthenticationManager authenticationManager;
 
     public User register(RegisterRequest request){
         if(userRepository.existsByEmail(request.getEmail())){
@@ -32,5 +42,22 @@ public class AuthService {
         user.setRoles(List.of(Role.USER));
 
         return userRepository.save(user);
+    }
+
+    public Map<String,Object> login(LoginRequest request){
+
+        Authentication authentication = authenticationManager.authenticate(
+                new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword())
+        );
+
+        SecurityContextHolder.getContext().setAuthentication(authentication);
+
+        Map<String,Object> response = new HashMap<>();
+        response.put("message","Login successful");
+        response.put("username", authentication.getName());
+        response.put("authorities", authentication.getAuthorities());
+        response.put("authenticated", authentication.isAuthenticated());
+
+        return response;
     }
 }

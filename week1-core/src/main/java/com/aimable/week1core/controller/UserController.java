@@ -1,12 +1,15 @@
 package com.aimable.week1core.controller;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
 import java.util.Map;
 
 @RestController
+@Slf4j
 @RequestMapping("/api")
 public class UserController {
 
@@ -18,6 +21,7 @@ public class UserController {
         return ResponseEntity.ok(response);
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @PostMapping("/posts/create")
     public ResponseEntity<Map<String, String>> createPost() {
         Map<String, String> response = new HashMap<>();

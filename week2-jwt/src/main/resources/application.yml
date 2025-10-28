@@ -1,0 +1,12 @@
+spring:
+  application:
+    name: week2-jwt
+  config:
+    import: optional:file:.env[.properties]
+
+# JWT config
+app:
+  jwt:
+    secret: ${JWT_SECRET_KEY}
+    expiration: 900000 # 15 mins
+    refresh-expiration: 86400000 # 24 hours
